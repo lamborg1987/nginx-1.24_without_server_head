@@ -18,22 +18,8 @@ static ngx_int_t ngx_http_send_special_response(ngx_http_request_t *r,
 static ngx_int_t ngx_http_send_refresh(ngx_http_request_t *r);
 
 
-static u_char ngx_http_error_full_tail[] =
-"<hr><center>" NGINX_VER "</center>" CRLF
-"</body>" CRLF
-"</html>" CRLF
-;
-
-
-static u_char ngx_http_error_build_tail[] =
-"<hr><center>" NGINX_VER_BUILD "</center>" CRLF
-"</body>" CRLF
-"</html>" CRLF
-;
-
-
 static u_char ngx_http_error_tail[] =
-"<hr><center>nginx</center>" CRLF
+"<hr><center></center>" CRLF
 "</body>" CRLF
 "</html>" CRLF
 ;
@@ -680,18 +666,10 @@ ngx_http_send_special_response(ngx_http_request_t *r,
     ngx_uint_t    msie_padding;
     ngx_chain_t   out[3];
 
-    if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_ON) {
-        len = sizeof(ngx_http_error_full_tail) - 1;
-        tail = ngx_http_error_full_tail;
 
-    } else if (clcf->server_tokens == NGX_HTTP_SERVER_TOKENS_BUILD) {
-        len = sizeof(ngx_http_error_build_tail) - 1;
-        tail = ngx_http_error_build_tail;
-
-    } else {
-        len = sizeof(ngx_http_error_tail) - 1;
-        tail = ngx_http_error_tail;
-    }
+    len = sizeof(ngx_http_error_tail) - 1;
+    tail = ngx_http_error_tail;
+    
 
     msie_padding = 0;
 

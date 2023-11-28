@@ -121,14 +121,6 @@ static ngx_conf_enum_t  ngx_http_core_lingering_close[] = {
 };
 
 
-static ngx_conf_enum_t  ngx_http_core_server_tokens[] = {
-    { ngx_string("off"), NGX_HTTP_SERVER_TOKENS_OFF },
-    { ngx_string("on"), NGX_HTTP_SERVER_TOKENS_ON },
-    { ngx_string("build"), NGX_HTTP_SERVER_TOKENS_BUILD },
-    { ngx_null_string, 0 }
-};
-
-
 static ngx_conf_enum_t  ngx_http_core_if_modified_since[] = {
     { ngx_string("off"), NGX_HTTP_IMS_OFF },
     { ngx_string("exact"), NGX_HTTP_IMS_EXACT },
@@ -627,13 +619,6 @@ static ngx_command_t  ngx_http_core_commands[] = {
       NGX_HTTP_LOC_CONF_OFFSET,
       offsetof(ngx_http_core_loc_conf_t, recursive_error_pages),
       NULL },
-
-    { ngx_string("server_tokens"),
-      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
-      ngx_conf_set_enum_slot,
-      NGX_HTTP_LOC_CONF_OFFSET,
-      offsetof(ngx_http_core_loc_conf_t, server_tokens),
-      &ngx_http_core_server_tokens },
 
     { ngx_string("if_modified_since"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
@@ -3621,7 +3606,6 @@ ngx_http_core_create_loc_conf(ngx_conf_t *cf)
     clcf->recursive_error_pages = NGX_CONF_UNSET;
     clcf->chunked_transfer_encoding = NGX_CONF_UNSET;
     clcf->etag = NGX_CONF_UNSET;
-    clcf->server_tokens = NGX_CONF_UNSET_UINT;
     clcf->types_hash_max_size = NGX_CONF_UNSET_UINT;
     clcf->types_hash_bucket_size = NGX_CONF_UNSET_UINT;
 
@@ -3896,9 +3880,6 @@ ngx_http_core_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
     ngx_conf_merge_value(conf->chunked_transfer_encoding,
                               prev->chunked_transfer_encoding, 1);
     ngx_conf_merge_value(conf->etag, prev->etag, 1);
-
-    ngx_conf_merge_uint_value(conf->server_tokens, prev->server_tokens,
-                              NGX_HTTP_SERVER_TOKENS_ON);
 
     ngx_conf_merge_ptr_value(conf->open_file_cache,
                               prev->open_file_cache, NULL);
